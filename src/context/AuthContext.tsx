@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useCallback } from "react";
 import type { ReactNode } from "react";
-import axios from "axios";
+import api from "../api/api";
 import type { Usuario } from "../types";
 
 interface AuthContextType {
@@ -15,6 +15,7 @@ interface AuthContextType {
     fechaNacimiento: string
   ) => Promise<void>;
   logout: () => void;
+  setUser: (user: Usuario | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,13 +30,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const login = async (email: string, password: string) => {
-    const res = await axios.post("http://localhost:3000/auth/login", {
-      email,
-      password,
-    });
-    const { accessToken, refreshToken } = res.data;
+    const res = await api.post("/auth/login", { email, password });
+    const { accessToken, refreshToken, user } = res.data;
+
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
+    setUser(user);
+
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
   };
@@ -46,42 +47,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     fechaNacimiento: string
   ) => {
-    const res = await axios.post("http://localhost:3000/auth/register", {
+    const res = await api.post("/auth/register", {
       nombreUsuario,
       email,
       password,
       fechaNacimiento,
     });
-    const { accessToken, refreshToken } = res.data;
+    const { accessToken, refreshToken, user } = res.data;
+
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
+    setUser(user);
+
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setAccessToken(null);
     setRefreshToken(null);
+    setUser(null);
+
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-  };
-
-  useEffect(() => {
-    if (accessToken) {
-      axios
-        .get<Usuario>("http://localhost:3000/usuario/me", {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        })
-        .then((res) => setUser(res.data))
-        .catch(() => {
-          logout(); // si el token no sirve, se limpia
-        });
-    }
-  }, [accessToken]);
+  }, []);
 
   return (
     <AuthContext.Provider
-      value={{ accessToken, refreshToken, user, login, register, logout }}
+      value={{ accessToken, refreshToken, user, login, register, logout, setUser }}
     >
       {children}
     </AuthContext.Provider>

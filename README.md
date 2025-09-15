@@ -1,7 +1,6 @@
 # Fandoms App — Frontend
 
-Frontend del proyecto **Fandoms App**, desarrollado con [React](https://react.dev/) y [Vite](https://vitejs.dev/) usando TypeScript.  
-Actualmente se conecta al backend para obtener y mostrar una **lista de usuarios** desde el endpoint `/user`.
+Frontend del proyecto **Fandoms App**, desarrollado con [React](https://react.dev/) y [Vite](https://vitejs.dev/) usando TypeScript.
 
 ---
 
