@@ -15,7 +15,7 @@ export default function Register() {
     e.preventDefault();
     try {
       await register(nombreUsuario, email, password, fechaNacimiento);
-      navigate("/home");
+      navigate("/dashboard");
     } catch (err) {
       console.error("Error en registro", err);
       alert("Error en el registro");

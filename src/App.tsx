@@ -1,9 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Home from "./pages/Home";
 import { useAuth } from "./hooks/useAuth";
 import type { JSX } from "react";
+import Profile from "./pages/Profile";
+import Dashboard from "./pages/Dashboard";
+import EditProfile from "./pages/EditProfile";
+import UserProfile from "./pages/UserProfile";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { accessToken } = useAuth();
@@ -18,10 +21,35 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/home"
+          path="/dashboard"
           element={
             <PrivateRoute>
-              <Home />
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/edit-profile"
+          element={
+            <PrivateRoute>
+              <EditProfile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/users/:id"
+          element={
+            <PrivateRoute>
+              <UserProfile />
             </PrivateRoute>
           }
         />

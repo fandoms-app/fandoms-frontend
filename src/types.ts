@@ -4,7 +4,7 @@ export interface Usuario {
   email: string;
   avatar?: string | null;
   bio?: string | null;
-  fechaNacimiento: string; // backend lo devuelve como date, llega como string en json
+  fechaNacimiento: string;
   fechaCreacion: string;
   rol: string; // viene del enum rolglobal
 }

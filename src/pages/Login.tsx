@@ -12,7 +12,7 @@ export default function Login() {
     e.preventDefault();
     try {
       await login(email, password);
-      navigate("/home");
+      navigate("/dashboard");
     } catch (err) {
       console.error("Error en login", err);
       alert("Credenciales inválidas");

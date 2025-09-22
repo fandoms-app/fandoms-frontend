@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import type { ReactNode } from "react";
 import api from "../api/api";
 import type { Usuario } from "../types";
@@ -7,6 +7,7 @@ interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
   user: Usuario | null;
+  loadingUser: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (
     nombreUsuario: string,
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
   const [accessToken, setAccessToken] = useState<string | null>(
     localStorage.getItem("accessToken")
   );
@@ -29,16 +31,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.getItem("refreshToken")
   );
 
+  const fetchUser = useCallback(async () => {
+    if (!accessToken) {
+      setUser(null);
+      setLoadingUser(false);
+      return;
+    }
+    try {
+      const res = await api.get<Usuario>("/usuario/me");
+      setUser(res.data);
+    } catch {
+      setUser(null);
+    } finally {
+      setLoadingUser(false);
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    void fetchUser();
+  }, [fetchUser]);
+
   const login = async (email: string, password: string) => {
     const res = await api.post("/auth/login", { email, password });
-    const { accessToken, refreshToken, user } = res.data;
+    const { accessToken, refreshToken } = res.data;
 
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
-    setUser(user);
 
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+
+    await fetchUser();
   };
 
   const register = async (
@@ -53,14 +76,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       fechaNacimiento,
     });
-    const { accessToken, refreshToken, user } = res.data;
+    const { accessToken, refreshToken } = res.data;
 
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
-    setUser(user);
 
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+
+    await fetchUser();
   };
 
   const logout = useCallback(() => {
@@ -74,7 +98,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ accessToken, refreshToken, user, login, register, logout, setUser }}
+      value={{
+        accessToken,
+        refreshToken,
+        user,
+        loadingUser,
+        login,
+        register,
+        logout,
+        setUser,
+      }}
     >
       {children}
     </AuthContext.Provider>
