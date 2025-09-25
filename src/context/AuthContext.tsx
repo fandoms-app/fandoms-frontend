@@ -61,6 +61,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
+    api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
     await fetchUser();
   };
 
@@ -83,6 +85,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+
+    api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
     await fetchUser();
   };

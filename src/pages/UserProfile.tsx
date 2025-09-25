@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/api";
 import type { Usuario } from "../types";
 import { useAuth } from "../hooks/useAuth";
+import ProfileCard from "../components/ProfileCard";
+import Layout from "../components/Layout";
 
 interface UserProfileData extends Usuario {
   seguidoresCount: number;
@@ -12,6 +14,7 @@ interface UserProfileData extends Usuario {
 export default function UserProfile() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [profile, setProfile] = useState<UserProfileData | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -67,20 +70,16 @@ export default function UserProfile() {
   if (!profile) return <p>Cargando...</p>;
 
   return (
-    <div>
-      <h2>{profile.nombreUsuario}</h2>
-      {profile.avatar && <img src={profile.avatar} alt="Avatar" width={100} height={100} />}
-      <p>{profile.bio || "Sin biografía"}</p>
-      <p><strong>Seguidores:</strong> {profile.seguidoresCount}</p>
-      <p><strong>Seguidos:</strong> {profile.seguidosCount}</p>
-
-      {user && user.id !== profile.id && (
-        isFollowing ? (
-          <button onClick={handleUnfollow}>Dejar de seguir</button>
-        ) : (
-          <button onClick={handleFollow}>Seguir</button>
-        )
-      )}
-    </div>
+    <Layout>
+      <ProfileCard
+        user={profile}
+        isFollowing={isFollowing}
+        onFollow={handleFollow}
+        onUnfollow={handleUnfollow}
+        showFollow
+        isOwnProfile={user?.id === profile.id}
+        onEdit={user?.id === profile.id ? () => navigate("/edit-profile") : undefined}
+      />
+    </Layout>
   );
 }

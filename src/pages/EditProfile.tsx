@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { updateMe } from "../api/usuarioApi";
 import { useNavigate } from "react-router-dom";
+import Card from "../components/Card";
+import Layout from "../components/Layout";
+import FormInput from "../components/FormImput";
 
 export default function EditProfile() {
   const { user, setUser } = useAuth();
@@ -37,7 +40,7 @@ export default function EditProfile() {
     try {
       const res = await updateMe(data);
       setUser(res.data);
-      navigate("/profile");
+      navigate(`/users/${res.data.id}`);
     } catch (err) {
       console.error("Error actualizando perfil", err);
       alert("No se pudo actualizar el perfil");
@@ -45,51 +48,63 @@ export default function EditProfile() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Editar perfil</h2>
+    <Layout>
+      <Card>
+        <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
+          Editar perfil
+        </h2>
 
-      <input
-        type="text"
-        name="nombreUsuario"
-        value={form.nombreUsuario}
-        onChange={handleChange}
-        placeholder="Nombre de usuario"
-      />
-      <input
-        type="email"
-        name="email"
-        value={form.email}
-        onChange={handleChange}
-        placeholder="Correo"
-      />
-      <input
-        type="text"
-        name="avatar"
-        value={form.avatar}
-        onChange={handleChange}
-        placeholder="URL de avatar"
-      />
-      <textarea
-        name="bio"
-        value={form.bio}
-        onChange={handleChange}
-        placeholder="Biografía"
-      />
-      <input
-        type="date"
-        name="fechaNacimiento"
-        value={form.fechaNacimiento}
-        onChange={handleChange}
-      />
-      <input
-        type="password"
-        name="password"
-        value={form.password}
-        onChange={handleChange}
-        placeholder="Nueva contraseña (opcional)"
-      />
+        <form onSubmit={handleSubmit}>
+          <FormInput
+            type="text"
+            name="nombreUsuario"
+            value={form.nombreUsuario}
+            onChange={handleChange}
+            placeholder="Nombre de usuario"
+          />
+          <FormInput
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="Correo"
+          />
+          <FormInput
+            type="text"
+            name="avatar"
+            value={form.avatar}
+            onChange={handleChange}
+            placeholder="URL de avatar"
+          />
+          <textarea
+            name="bio"
+            value={form.bio}
+            onChange={handleChange}
+            placeholder="Biografía"
+            className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <FormInput
+            type="date"
+            name="fechaNacimiento"
+            value={form.fechaNacimiento}
+            onChange={handleChange}
+          />
+          <FormInput
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Nueva contraseña (opcional)"
+          />
 
-      <button type="submit">Guardar cambios</button>
-    </form>
+          <button
+            type="submit"
+            className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition"
+          >
+            Guardar cambios
+          </button>
+        </form>
+      </Card>
+    </Layout>
   );
 }

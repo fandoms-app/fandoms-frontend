@@ -3,7 +3,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { useAuth } from "./hooks/useAuth";
 import type { JSX } from "react";
-import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import EditProfile from "./pages/EditProfile";
 import UserProfile from "./pages/UserProfile";
@@ -25,15 +24,6 @@ export default function App() {
           element={
             <PrivateRoute>
               <Dashboard />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <Profile />
             </PrivateRoute>
           }
         />
