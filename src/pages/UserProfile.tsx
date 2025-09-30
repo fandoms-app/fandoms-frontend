@@ -5,6 +5,7 @@ import type { Usuario } from "../types";
 import { useAuth } from "../hooks/useAuth";
 import ProfileCard from "../components/ProfileCard";
 import Layout from "../components/Layout";
+import BackButton from "../components/BackButton";
 
 interface UserProfileData extends Usuario {
   seguidoresCount: number;
@@ -71,15 +72,18 @@ export default function UserProfile() {
 
   return (
     <Layout>
-      <ProfileCard
-        user={profile}
-        isFollowing={isFollowing}
-        onFollow={handleFollow}
-        onUnfollow={handleUnfollow}
-        showFollow
-        isOwnProfile={user?.id === profile.id}
-        onEdit={user?.id === profile.id ? () => navigate("/edit-profile") : undefined}
-      />
+      <div className="w-full max-w-md space-y-4">
+        <BackButton />
+        <ProfileCard
+          user={profile}
+          isFollowing={isFollowing}
+          onFollow={handleFollow}
+          onUnfollow={handleUnfollow}
+          showFollow
+          isOwnProfile={user?.id === profile.id}
+          onEdit={user?.id === profile.id ? () => navigate("/edit-profile") : undefined}
+        />
+      </div>
     </Layout>
   );
 }

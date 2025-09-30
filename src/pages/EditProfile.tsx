@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
 import FormInput from "../components/FormImput";
+import BackButton from "../components/BackButton";
 
 export default function EditProfile() {
   const { user, setUser } = useAuth();
@@ -49,62 +50,63 @@ export default function EditProfile() {
 
   return (
     <Layout>
-      <Card>
-        <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
-          Editar perfil
-        </h2>
-
-        <form onSubmit={handleSubmit}>
-          <FormInput
-            type="text"
-            name="nombreUsuario"
-            value={form.nombreUsuario}
-            onChange={handleChange}
-            placeholder="Nombre de usuario"
-          />
-          <FormInput
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Correo"
-          />
-          <FormInput
-            type="text"
-            name="avatar"
-            value={form.avatar}
-            onChange={handleChange}
-            placeholder="URL de avatar"
-          />
-          <textarea
-            name="bio"
-            value={form.bio}
-            onChange={handleChange}
-            placeholder="Biografía"
-            className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          <FormInput
-            type="date"
-            name="fechaNacimiento"
-            value={form.fechaNacimiento}
-            onChange={handleChange}
-          />
-          <FormInput
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Nueva contraseña (opcional)"
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition"
-          >
-            Guardar cambios
-          </button>
-        </form>
-      </Card>
+      <div className="w-full max-w-md space-y-4">
+        <BackButton />
+        <Card>
+          <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
+            Editar perfil
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <FormInput
+              type="text"
+              name="nombreUsuario"
+              value={form.nombreUsuario}
+              onChange={handleChange}
+              placeholder="Nombre de usuario"
+            />
+            <FormInput
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Correo"
+            />
+            <FormInput
+              type="text"
+              name="avatar"
+              value={form.avatar}
+              onChange={handleChange}
+              placeholder="URL de avatar"
+            />
+            <textarea
+              name="bio"
+              value={form.bio}
+              onChange={handleChange}
+              placeholder="Biografía"
+              className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            <FormInput
+              type="date"
+              name="fechaNacimiento"
+              value={form.fechaNacimiento}
+              onChange={handleChange}
+            />
+            <FormInput
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Nueva contraseña (opcional)"
+            />
+            <button
+              type="submit"
+              className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition"
+            >
+              Guardar cambios
+            </button>
+          </form>
+        </Card>
+      </div>
     </Layout>
   );
 }

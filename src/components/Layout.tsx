@@ -68,8 +68,8 @@ export default function Layout({ children, showNavbar = true }: LayoutProps) {
         </nav>
       )}
 
-      <main className="flex-grow flex items-center justify-center p-6">
-        {children}
+      <main className="flex-grow p-6 flex justify-center">
+        <div className="w-full max-w-6xl">{children}</div>
       </main>
     </div>
   );
