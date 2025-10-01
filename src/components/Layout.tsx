@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
+import UserMenu from "./UserMenu";
 
 interface LayoutProps {
   children: ReactNode;
@@ -41,21 +42,7 @@ export default function Layout({ children, showNavbar = true }: LayoutProps) {
 
           <div className="flex items-center gap-4">
             {user ? (
-              <>
-                <button
-                  onClick={() => navigate(`/users/${user.id}`)}
-                  className="text-purple-600 hover:text-purple-800"
-                >
-                  Mi perfil
-                </button>
-
-                <button
-                  onClick={logout}
-                  className="bg-purple-600 text-white px-3 py-1 rounded-md hover:bg-purple-700 transition"
-                >
-                  Cerrar sesión
-                </button>
-              </>
+              <UserMenu user={user} logout={logout} navigate={navigate} />
             ) : (
               <Link
                 to="/login"
