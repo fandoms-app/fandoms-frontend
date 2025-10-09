@@ -37,7 +37,11 @@ export default function ProfileCard({
       </h2>
 
       <p className="text-gray-700">{user.bio || "Sin biografía"}</p>
-      <p className="mt-2 text-sm text-gray-500">📧 {user.email}</p>
+
+      {isOwnProfile && (
+        <p className="mt-2 text-sm text-gray-500">📧 {user.email}</p>
+      )}
+
       {user.fechaNacimiento && (
         <p className="text-sm text-gray-500">
           🎂 {new Date(user.fechaNacimiento).toLocaleDateString("es-AR")}

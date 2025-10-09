@@ -24,3 +24,12 @@ export const getFollowers = (id: string) =>
 
 export const getFollowing = (id: string) =>
   api.get<Usuario[]>(`/usuario/${id}/seguidos`);
+
+export const uploadAvatar = (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return api.patch<Usuario>("/usuario/me/avatar", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};

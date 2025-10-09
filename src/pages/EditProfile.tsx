@@ -6,6 +6,7 @@ import Card from "../components/Card";
 import Layout from "../components/Layout";
 import FormInput from "../components/FormImput";
 import BackButton from "../components/BackButton";
+import { ProfileAvatarUploader } from "../components/ProfileAvatarUploader";
 
 export default function EditProfile() {
   const { user, setUser } = useAuth();
@@ -15,14 +16,15 @@ export default function EditProfile() {
     nombreUsuario: user?.nombreUsuario ?? "",
     email: user?.email ?? "",
     bio: user?.bio ?? "",
-    avatar: user?.avatar ?? "",
     fechaNacimiento: user?.fechaNacimiento
       ? user.fechaNacimiento.slice(0, 10)
       : "",
     password: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -31,12 +33,8 @@ export default function EditProfile() {
     e.preventDefault();
 
     const data = Object.fromEntries(
-      Object.entries(form).filter(([key, v]) => {
-        if (["bio", "avatar"].includes(key)) return v !== undefined;
-        return v !== "" && v !== undefined;
-      })
+      Object.entries(form).filter(([, v]) => v !== "" && v !== undefined)
     );
-
 
     try {
       const res = await updateMe(data);
@@ -48,6 +46,13 @@ export default function EditProfile() {
     }
   };
 
+  const handleAvatarUpload = (newAvatarUrl: string) => {
+    if (user) {
+      const updatedUser = { ...user, avatar: newAvatarUrl };
+      setUser(updatedUser);
+    }
+  };
+
   return (
     <Layout>
       <div className="w-full max-w-md space-y-4">
@@ -56,6 +61,14 @@ export default function EditProfile() {
           <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
             Editar perfil
           </h2>
+
+          <div className="flex justify-center mb-4">
+            <ProfileAvatarUploader
+              currentAvatar={user?.avatar ?? null}
+              onUploadSuccess={handleAvatarUpload}
+            />
+          </div>
+
           <form onSubmit={handleSubmit}>
             <FormInput
               type="text"
@@ -70,13 +83,6 @@ export default function EditProfile() {
               value={form.email}
               onChange={handleChange}
               placeholder="Correo"
-            />
-            <FormInput
-              type="text"
-              name="avatar"
-              value={form.avatar}
-              onChange={handleChange}
-              placeholder="URL de avatar"
             />
             <textarea
               name="bio"
