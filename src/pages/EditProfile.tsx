@@ -39,7 +39,7 @@ export default function EditProfile() {
     try {
       const res = await updateMe(data);
       setUser(res.data);
-      navigate(`/users/${res.data.id}`);
+      navigate(`/usuarios/${res.data.id}`);
     } catch (err) {
       console.error("Error actualizando perfil", err);
       alert("No se pudo actualizar el perfil");

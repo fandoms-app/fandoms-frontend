@@ -8,7 +8,7 @@ interface Props {
 export default function SubchannelCard({ canal }: Props) {
   return (
     <Link
-      to={`/channels/${canal.id}`}
+      to={`/canales/${canal.id}`}
       className="min-w-[140px] bg-purple-50 p-3 rounded-xl shadow hover:shadow-md transition flex-shrink-0"
     >
       <h3 className="font-semibold text-purple-700 truncate">

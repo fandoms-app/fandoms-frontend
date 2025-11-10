@@ -83,7 +83,7 @@ api.interceptors.response.use(
 
                 if (setUserFn) {
                     try {
-                        const me = await api.get<Usuario>("/usuario/me");
+                        const me = await api.get<Usuario>("/usuarios/me");
                         setUserFn(me.data);
                     } catch {
                         setUserFn(null);

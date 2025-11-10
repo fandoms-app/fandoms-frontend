@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     try {
-      const res = await api.get<Usuario>("/usuario/me");
+      const res = await api.get<Usuario>("/usuarios/me");
       setUser(res.data);
     } catch {
       setUser(null);

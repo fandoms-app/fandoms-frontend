@@ -23,7 +23,7 @@ export default function ChannelCard({
     <Card className="p-4 space-y-2 hover:shadow-md transition">
       <div className="flex items-center justify-between">
         <h2 className="font-bold text-lg text-purple-700">
-          <Link to={`/channels/${canal.id}`} className="hover:underline">
+          <Link to={`/canales/${canal.id}`} className="hover:underline">
             {canal.nombreCanal}
           </Link>
         </h2>

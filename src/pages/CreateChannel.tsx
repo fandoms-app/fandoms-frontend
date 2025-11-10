@@ -19,7 +19,7 @@ export default function CreateChannel() {
         descripcion,
         idCanalPadre: parentId ?? null,
       });
-      navigate(`/channels/${res.data.id}`);
+      navigate(`/canales/${res.data.id}`);
     } catch (err) {
       console.error("Error creando canal", err);
     }

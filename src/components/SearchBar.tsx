@@ -36,7 +36,7 @@ export default function SearchBar() {
     const delayDebounce = setTimeout(async () => {
       try {
         setLoading(true);
-        const res = await api.get<SearchResponse>(`/usuario/search?q=${query}`);
+        const res = await api.get<SearchResponse>(`/usuarios/search?q=${query}`);
         setResults(res.data);
         setShowDropdown(true);
       } catch (err) {
@@ -54,14 +54,14 @@ export default function SearchBar() {
     setQuery("");
     setResults(null);
     setShowDropdown(false);
-    navigate(`/users/${user.id}`);
+    navigate(`/usuarios/${user.id}`);
   };
 
   const handleSelectCanal = (canal: CanalResult) => {
     setQuery("");
     setResults(null);
     setShowDropdown(false);
-    navigate(`/channels/${canal.id}`);
+    navigate(`/canales/${canal.id}`);
   };
 
   return (

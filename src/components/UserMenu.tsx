@@ -43,7 +43,7 @@ export default function UserMenu({ user, logout, navigate }: UserMenuProps) {
           <button
             onClick={() => {
               setOpen(false);
-              navigate(`/users/${user.id}`);
+              navigate(`/usuarios/${user.id}`);
             }}
             className="block w-full px-4 py-2 text-left hover:bg-gray-100"
           >

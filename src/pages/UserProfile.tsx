@@ -24,7 +24,7 @@ export default function UserProfile() {
     if (!id) return;
 
     api
-      .get<UserProfileData>(`/usuario/${id}/profile`)
+      .get<UserProfileData>(`/usuarios/${id}/profile`)
       .then((res) => {
         setProfile(res.data);
       })
@@ -34,7 +34,7 @@ export default function UserProfile() {
 
     if (user) {
       api
-        .get<Usuario[]>(`/usuario/${id}/seguidores`)
+        .get<Usuario[]>(`/usuarios/${id}/seguidores`)
         .then((res) => {
           setIsFollowing(res.data.some((f) => f.id === user.id));
         })
@@ -45,7 +45,7 @@ export default function UserProfile() {
   const handleFollow = async () => {
     if (!id) return;
     try {
-      await api.post(`/usuario/${id}/follow`);
+      await api.post(`/usuarios/${id}/follow`);
       setIsFollowing(true);
       setProfile((prev) =>
         prev ? { ...prev, seguidoresCount: prev.seguidoresCount + 1 } : prev
@@ -58,7 +58,7 @@ export default function UserProfile() {
   const handleUnfollow = async () => {
     if (!id) return;
     try {
-      await api.delete(`/usuario/${id}/follow`);
+      await api.delete(`/usuarios/${id}/follow`);
       setIsFollowing(false);
       setProfile((prev) =>
         prev ? { ...prev, seguidoresCount: prev.seguidoresCount - 1 } : prev

@@ -1,35 +1,35 @@
 import api from "./api";
 import type { Usuario } from "../types";
 
-export const getMe = () => api.get<Usuario>("/usuario/me");
+export const getMe = () => api.get<Usuario>("/usuarios/me");
 
 export const updateMe = (data: Partial<Usuario>) =>
-  api.patch<Usuario>("/usuario/me", data);
+  api.patch<Usuario>("/usuarios/me", data);
 
 export const getUserProfile = (id: string) =>
   api.get<Usuario & {
     publicacionesCount: number;
     seguidoresCount: number;
     seguidosCount: number;
-  }>(`/usuario/${id}/profile`);
+  }>(`/usuarios/${id}/profile`);
 
 export const followUser = (id: string) =>
-  api.post<{ ok: boolean }>(`/usuario/${id}/follow`);
+  api.post<{ ok: boolean }>(`/usuarios/${id}/follow`);
 
 export const unfollowUser = (id: string) =>
-  api.delete<{ ok: boolean }>(`/usuario/${id}/follow`);
+  api.delete<{ ok: boolean }>(`/usuarios/${id}/follow`);
 
 export const getFollowers = (id: string) =>
-  api.get<Usuario[]>(`/usuario/${id}/seguidores`);
+  api.get<Usuario[]>(`/usuarios/${id}/seguidores`);
 
 export const getFollowing = (id: string) =>
-  api.get<Usuario[]>(`/usuario/${id}/seguidos`);
+  api.get<Usuario[]>(`/usuarios/${id}/seguidos`);
 
 export const uploadAvatar = (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
-  return api.patch<Usuario>("/usuario/me/avatar", formData, {
+  return api.patch<Usuario>("/usuarios/me/avatar", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };

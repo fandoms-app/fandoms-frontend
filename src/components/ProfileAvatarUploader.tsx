@@ -18,7 +18,7 @@ export function ProfileAvatarUploader({ currentAvatar, onUploadSuccess }: Props)
 
     try {
       setUploading(true);
-      const res = await api.patch("/usuario/me/avatar", formData, {
+      const res = await api.patch("/usuarios/me/avatar", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       onUploadSuccess(res.data.avatar);

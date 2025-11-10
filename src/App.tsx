@@ -10,6 +10,8 @@ import ExploreChannels from "./pages/ExploreChanels";
 import ChannelDetail from "./pages/ChannelDetail";
 import CreateChannel from "./pages/CreateChannel";
 import FollowingChannels from "./pages/FollowingChannels";
+import PublicationDetail from "./pages/PublicationDetail";
+import EditPublication from "./pages/EditPublication";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { accessToken } = useAuth();
@@ -40,7 +42,7 @@ export default function App() {
           }
         />
         <Route
-          path="/users/:id"
+          path="/usuarios/:id"
           element={
             <PrivateRoute>
               <UserProfile />
@@ -84,6 +86,22 @@ export default function App() {
           element={
             <PrivateRoute>
               <FollowingChannels />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/publicaciones/:id"
+          element={
+            <PrivateRoute>
+              <PublicationDetail />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/edit-publication/:id"
+          element={
+            <PrivateRoute>
+              <EditPublication />
             </PrivateRoute>
           }
         />

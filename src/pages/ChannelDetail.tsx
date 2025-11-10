@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import ChannelCard from "../components/ChannelCard";
 import { useAuth } from "../hooks/useAuth";
-import type { Canal } from "../types";
+import type { Canal, Publicacion } from "../types";
 import {
   getCanal,
   getCanalFollowers,
@@ -13,6 +13,9 @@ import {
 } from "../api/canalApi";
 import SubchannelCard from "../components/SubchannelCard";
 import BackButton from "../components/BackButton";
+import CreatePublication from "./CreatePublication";
+import PublicationCard from "../components/PublicationCard";
+import { getPublicacionesByCanal } from "../api/publicacionApi";
 
 export default function ChannelDetail() {
   const { id } = useParams<{ id: string }>();
@@ -21,12 +24,27 @@ export default function ChannelDetail() {
   const [canal, setCanal] = useState<Canal | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [subCanales, setSubCanales] = useState<Canal[]>([]);
+  const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
+  const [loadingPubs, setLoadingPubs] = useState(false);
+
+  const loadPublicaciones = async (canalId: string) => {
+    try {
+      setLoadingPubs(true);
+      const res = await getPublicacionesByCanal(canalId);
+      setPublicaciones(res.data);
+    } catch (err) {
+      console.error("Error cargando publicaciones", err);
+    } finally {
+      setLoadingPubs(false);
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
 
     getCanal(id).then((res) => setCanal(res.data)).catch(console.error);
     getSubCanales(id).then((res) => setSubCanales(res.data)).catch(console.error);
+    loadPublicaciones(id);
 
     if (user) {
       getCanalFollowers(id)
@@ -55,7 +73,7 @@ export default function ChannelDetail() {
     }
   };
 
-  if (!canal) return <p>Cargando...</p>;
+  if (!canal) return <p>Cargando canal...</p>;
 
   return (
     <Layout>
@@ -90,13 +108,31 @@ export default function ChannelDetail() {
           </button>
         )}
 
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="font-bold text-lg text-purple-700 mb-2">
-            Publicaciones
-          </h2>
-          <p className="text-gray-500 text-sm">
-            Aquí se mostrarán las publicaciones de este canal.
-          </p>
+        <div className="bg-white p-4 rounded-lg shadow space-y-4">
+          <h2 className="font-bold text-lg text-purple-700 mb-2">Publicaciones</h2>
+
+          {user && (
+            <CreatePublication
+              idCanal={canal.id}
+              onCreated={() => loadPublicaciones(canal.id)}
+            />
+          )}
+
+          {loadingPubs ? (
+            <p>Cargando publicaciones...</p>
+          ) : publicaciones.length === 0 ? (
+            <p className="text-gray-500 text-sm">Aún no hay publicaciones en este canal.</p>
+          ) : (
+            <div className="space-y-4">
+              {publicaciones.map((pub) => (
+                <PublicationCard
+                  key={pub.id}
+                  publicacion={pub}
+                  onRefresh={() => loadPublicaciones(canal.id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </Layout>
