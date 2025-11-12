@@ -58,7 +58,7 @@ export default function App() {
           }
         />
         <Route
-          path="/channels/:id"
+          path="/canales/:id"
           element={
             <PrivateRoute>
               <ChannelDetail />

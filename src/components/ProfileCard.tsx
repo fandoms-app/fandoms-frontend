@@ -22,19 +22,43 @@ export default function ProfileCard({
   showFollow = false,
   isOwnProfile = false,
 }: ProfileCardProps) {
+  const getRoleBadgeClasses = (rol: string) => {
+    switch (rol.toUpperCase()) {
+      case "ADMIN":
+        return "bg-purple-200 text-purple-900 border border-purple-400";
+      case "MOD":
+      case "MODERADOR":
+        return "bg-purple-100 text-purple-700 border border-purple-300";
+      default:
+        return "bg-purple-50 text-purple-600 border border-purple-200";
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md text-center">
       {user.avatar && (
         <img
           src={user.avatar}
           alt={`Avatar de ${user.nombreUsuario}`}
-          className="w-24 h-24 rounded-full mx-auto mb-4"
+          className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-purple-200"
         />
       )}
 
-      <h2 className="text-2xl font-bold text-purple-600 mb-2">
+      <h2 className="text-2xl font-bold text-purple-700 mb-1">
         {user.nombreUsuario}
       </h2>
+
+      {user.rol && (
+        <div className="flex justify-center mb-3">
+          <span
+            className={`text-xs font-semibold px-3 py-1 rounded-full ${getRoleBadgeClasses(
+              user.rol
+            )}`}
+          >
+            {user.rol.toUpperCase()}
+          </span>
+        </div>
+      )}
 
       <p className="text-gray-700">{user.bio || "Sin biografía"}</p>
 
@@ -48,21 +72,11 @@ export default function ProfileCard({
         </p>
       )}
 
-      {user.rol !== "usuario" && (
-        <p className="mt-2 text-sm">
-          <strong>Rol:</strong> {user.rol}
-        </p>
-      )}
-
       {typeof user.seguidoresCount === "number" && (
-        <p className="mt-2 text-sm">
-          👥 Seguidores: {user.seguidoresCount}
-        </p>
+        <p className="mt-2 text-sm">👥 Seguidores: {user.seguidoresCount}</p>
       )}
       {typeof user.seguidosCount === "number" && (
-        <p className="text-sm">
-          ➡️ Seguidos: {user.seguidosCount}
-        </p>
+        <p className="text-sm">➡️ Seguidos: {user.seguidosCount}</p>
       )}
 
       {!isOwnProfile && showFollow && (
