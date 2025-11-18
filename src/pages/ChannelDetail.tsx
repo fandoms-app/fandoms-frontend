@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import ChannelCard from "../components/ChannelCard";
-import { useAuth } from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 import type { Canal, Publicacion } from "../types";
 import {
   getCanal,

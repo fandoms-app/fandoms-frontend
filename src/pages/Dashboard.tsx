@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
 import Card from "../components/Card";
-import { useAuth } from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 
 export default function Dashboard() {
   const { user, loadingUser } = useAuth();

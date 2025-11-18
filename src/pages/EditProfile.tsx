@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { updateMe } from "../api/usuarioApi";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
-import FormInput from "../components/FormImput";
+import FormInput from "../components/FormInput";
 import BackButton from "../components/BackButton";
 import { ProfileAvatarUploader } from "../components/ProfileAvatarUploader";
+import useAuth from "../hooks/useAuth";
 
 export default function EditProfile() {
-  const { user, setUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -38,7 +38,7 @@ export default function EditProfile() {
 
     try {
       const res = await updateMe(data);
-      setUser(res.data);
+      await refreshUser();
       navigate(`/usuarios/${res.data.id}`);
     } catch (err) {
       console.error("Error actualizando perfil", err);
@@ -46,10 +46,11 @@ export default function EditProfile() {
     }
   };
 
-  const handleAvatarUpload = (newAvatarUrl: string) => {
-    if (user) {
-      const updatedUser = { ...user, avatar: newAvatarUrl };
-      setUser(updatedUser);
+  const handleAvatarUpload = async () => {
+    try {
+      await refreshUser();
+    } catch (err) {
+      console.error("Error refrescando usuario", err);
     }
   };
 

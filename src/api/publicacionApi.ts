@@ -5,7 +5,6 @@ export const createPublicacion = (data: FormData) => {
   return api.post("/publicaciones", data, {
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
 };

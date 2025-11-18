@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { Link, useNavigate } from "react-router-dom";
-import Card from "../components/Card";
+import React, { useState, type JSX } from "react";
+import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function RegisterPage(): JSX.Element {
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -11,73 +10,66 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      await register(nombreUsuario, email, password, fechaNacimiento);
+      await register({ nombreUsuario, email, password, fechaNacimiento });
       navigate("/dashboard");
-    } catch (err) {
-      console.error("Error en registro", err);
-      alert("Error en el registro");
+    } catch (err: unknown) {
+      setError((err as Error).message ?? "Error al registrarse");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card>
-        <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
-          Registro
-        </h2>
+    <div className="max-w-md mx-auto p-6">
+      <h2 className="text-2xl font-bold mb-4">Crear cuenta</h2>
+      <form onSubmit={onSubmit}>
+        <input
+          value={nombreUsuario}
+          onChange={(e) => setNombreUsuario(e.target.value)}
+          placeholder="Nombre de usuario"
+          className="w-full mb-3 p-2 border rounded"
+          required
+        />
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          type="email"
+          className="w-full mb-3 p-2 border rounded"
+          required
+        />
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Contraseña"
+          type="password"
+          minLength={6}
+          className="w-full mb-3 p-2 border rounded"
+          required
+        />
+        <input
+          value={fechaNacimiento}
+          onChange={(e) => setFechaNacimiento(e.target.value)}
+          placeholder="Fecha de nacimiento (YYYY-MM-DD)"
+          type="date"
+          className="w-full mb-3 p-2 border rounded"
+          required
+        />
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Nombre de usuario"
-            value={nombreUsuario}
-            onChange={(e) => setNombreUsuario(e.target.value)}
-            className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          <input
-            type="email"
-            placeholder="Correo"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength={6}
-            className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          <input
-            type="date"
-            value={fechaNacimiento}
-            onChange={(e) => setFechaNacimiento(e.target.value)}
-            className="w-full p-3 border rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+        <button type="submit" disabled={loading} className="w-full p-2 bg-purple-600 text-white rounded">
+          {loading ? "Creando..." : "Registrarme"}
+        </button>
+      </form>
 
-          <button
-            type="submit"
-            className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition"
-          >
-            Registrarse
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-600 mt-4">
-          ¿Ya tienes cuenta?{" "}
-          <Link
-            to="/login"
-            className="text-purple-600 hover:text-purple-800 font-medium"
-          >
-            Inicia sesión
-          </Link>
-        </p>
-      </Card>
+      {error && <div className="mt-3 text-red-600">{error}</div>}
     </div>
   );
 }

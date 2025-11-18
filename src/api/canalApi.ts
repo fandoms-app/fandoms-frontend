@@ -1,5 +1,5 @@
-import api from "./api";
 import type { Canal, Usuario } from "../types";
+import api from "./api";
 
 export const getAllCanales = () =>
     api.get<Canal[]>("/canales");

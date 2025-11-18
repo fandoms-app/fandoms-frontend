@@ -1,13 +1,19 @@
-import { StrictMode } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
-import { AuthProvider } from "./context/AuthContext";
-import Root from "./Root";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import { AuthProvider } from "./context/authProvider";
 import "./App.css";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+const container = document.getElementById("root");
+if (!container) throw new Error("Root element not found");
+
+createRoot(container).render(
+  <React.StrictMode>
     <AuthProvider>
-      <Root />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </AuthProvider>
-  </StrictMode>
+  </React.StrictMode>
 );

@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 
 interface UserMenuProps {
-  user: { id: string; nombreUsuario: string; avatar?: string | null };
+  user: {
+    id: string;
+    nombreUsuario?: string | null;
+    avatar?: string | null;
+  };
   logout: () => void;
   navigate: (path: string) => void;
 }
@@ -22,18 +26,21 @@ export default function UserMenu({ user, logout, navigate }: UserMenuProps) {
     };
   }, []);
 
+  const initial =
+    user.nombreUsuario?.charAt(0).toUpperCase() ?? user.id.charAt(0);
+
   return (
     <div className="relative" ref={menuRef}>
       <button onClick={() => setOpen(!open)}>
         {user.avatar ? (
           <img
             src={user.avatar}
-            alt={user.nombreUsuario}
+            alt={user.nombreUsuario ?? "Usuario"}
             className="w-10 h-10 rounded-full object-cover border-2 border-purple-600"
           />
         ) : (
           <div className="w-10 h-10 flex items-center justify-center rounded-full bg-purple-600 text-white font-bold">
-            {user.nombreUsuario.charAt(0).toUpperCase()}
+            {initial}
           </div>
         )}
       </button>

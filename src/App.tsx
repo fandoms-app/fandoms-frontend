@@ -1,8 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { type JSX } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { useAuth } from "./hooks/useAuth";
-import type { JSX } from "react";
 import Dashboard from "./pages/Dashboard";
 import EditProfile from "./pages/EditProfile";
 import UserProfile from "./pages/UserProfile";
@@ -12,100 +11,107 @@ import CreateChannel from "./pages/CreateChannel";
 import FollowingChannels from "./pages/FollowingChannels";
 import PublicationDetail from "./pages/PublicationDetail";
 import EditPublication from "./pages/EditPublication";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-function PrivateRoute({ children }: { children: JSX.Element }) {
-  const { accessToken } = useAuth();
-  return accessToken ? children : <Navigate to="/login" replace />;
-}
-
-export default function App() {
+export default function App(): JSX.Element {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/edit-profile"
-          element={
-            <PrivateRoute>
-              <EditProfile />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/usuarios/:id"
-          element={
-            <PrivateRoute>
-              <UserProfile />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/explore"
-          element={
-            <PrivateRoute>
-              <ExploreChannels />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/canales/:id"
-          element={
-            <PrivateRoute>
-              <ChannelDetail />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/create-channel"
-          element={
-            <PrivateRoute>
-              <CreateChannel />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/create-channel/:parentId"
-          element={
-            <PrivateRoute>
-              <CreateChannel />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/following"
-          element={
-            <PrivateRoute>
-              <FollowingChannels />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/publicaciones/:id"
-          element={
-            <PrivateRoute>
-              <PublicationDetail />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/edit-publication/:id"
-          element={
-            <PrivateRoute>
-              <EditPublication />
-            </PrivateRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/edit-profile"
+        element={
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/usuarios/:id"
+        element={
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/explore"
+        element={
+          <ProtectedRoute>
+            <ExploreChannels />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/canales/:id"
+        element={
+          <ProtectedRoute>
+            <ChannelDetail />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/create-channel"
+        element={
+          <ProtectedRoute>
+            <CreateChannel />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/create-channel/:parentId"
+        element={
+          <ProtectedRoute>
+            <CreateChannel />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/following"
+        element={
+          <ProtectedRoute>
+            <FollowingChannels />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/publicaciones/:id"
+        element={
+          <ProtectedRoute>
+            <PublicationDetail />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/edit-publication/:id"
+        element={
+          <ProtectedRoute>
+            <EditPublication />
+          </ProtectedRoute>
+        }
+      />
+
+    </Routes>
   );
 }

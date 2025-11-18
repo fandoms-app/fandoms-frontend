@@ -1,67 +1,78 @@
-import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import React, { useState, type JSX } from "react";
+import useAuth from "../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
-import Card from "../components/Card";
 
-export default function Login() {
-  const { login } = useAuth();
+export default function LoginPage(): JSX.Element {
+  const { login, loginWithGoogle } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
       await login(email, password);
       navigate("/dashboard");
-    } catch (err) {
-      console.error("Error en login", err);
-      alert("Credenciales inválidas");
+    } catch (err: unknown) {
+      setError((err as Error).message ?? "Error al iniciar sesión");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onGoogle = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await loginWithGoogle();
+      navigate("/dashboard");
+    } catch (err: unknown) {
+      setError((err as Error).message ?? "Error con Google");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card>
-        <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
-          Iniciar sesión
-        </h2>
+    <div className="max-w-md mx-auto p-6">
+      <h2 className="text-2xl font-bold mb-4">Iniciar sesión</h2>
+      <form onSubmit={onSubmit}>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          type="email"
+          className="w-full mb-3 p-2 border rounded"
+          required
+        />
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Contraseña"
+          type="password"
+          className="w-full mb-3 p-2 border rounded"
+          required
+        />
+        <button type="submit" disabled={loading} className="w-full p-2 bg-purple-600 text-white rounded">
+          {loading ? "Cargando..." : "Ingresar"}
+        </button>
+      </form>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Correo"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+      <div className="my-3 text-center">
+        <button onClick={onGoogle} className="px-4 py-2 border rounded">
+          Ingresar con Google
+        </button>
+      </div>
 
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+      <div className="text-center">
+        ¿No tenés cuenta? <Link to="/register" className="text-purple-600">Registrate</Link>
+      </div>
 
-          <button
-            type="submit"
-            className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition"
-          >
-            Ingresar
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-600 mt-4">
-          ¿No tienes cuenta?{" "}
-          <Link
-            to="/register"
-            className="text-purple-600 hover:text-purple-800 font-medium"
-          >
-            Regístrate
-          </Link>
-        </p>
-      </Card>
+      {error && <div className="mt-3 text-red-600">{error}</div>}
     </div>
   );
 }

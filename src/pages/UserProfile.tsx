@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/api";
 import type { Usuario } from "../types";
-import { useAuth } from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 import ProfileCard from "../components/ProfileCard";
 import Layout from "../components/Layout";
 import BackButton from "../components/BackButton";
