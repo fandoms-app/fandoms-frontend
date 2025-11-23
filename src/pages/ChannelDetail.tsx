@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Layout from "../components/Layout";
 import ChannelCard from "../components/ChannelCard";
 import useAuth from "../hooks/useAuth";
@@ -16,16 +16,19 @@ import BackButton from "../components/BackButton";
 import CreatePublication from "./CreatePublication";
 import PublicationCard from "../components/PublicationCard";
 import { getPublicacionesByCanal } from "../api/publicacionApi";
+import CreateSolicitudCanalModal from "../pages/CreateSolicitudCanalModal";
 
 export default function ChannelDetail() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { user } = useAuth();
+
   const [canal, setCanal] = useState<Canal | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [subCanales, setSubCanales] = useState<Canal[]>([]);
   const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
   const [loadingPubs, setLoadingPubs] = useState(false);
+
+  const [openSolicitudModal, setOpenSolicitudModal] = useState(false);
 
   const loadPublicaciones = async (canalId: string) => {
     try {
@@ -42,8 +45,8 @@ export default function ChannelDetail() {
   useEffect(() => {
     if (!id) return;
 
-    getCanal(id).then((res) => setCanal(res.data)).catch(console.error);
-    getSubCanales(id).then((res) => setSubCanales(res.data)).catch(console.error);
+    getCanal(id).then((res) => setCanal(res.data));
+    getSubCanales(id).then((res) => setSubCanales(res.data));
     loadPublicaciones(id);
 
     if (user) {
@@ -54,20 +57,28 @@ export default function ChannelDetail() {
   }, [id, user]);
 
   const handleFollow = async () => {
-    if (!id) return;
+    if (!canal) return;
     try {
-      await followCanal(id);
+      await followCanal(canal.id);
       setIsFollowing(true);
+      setCanal((c) =>
+        c ? { ...c, followersCount: (c.followersCount ?? 0) + 1 } : c
+      );
     } catch (err) {
       console.error("Error al seguir canal", err);
     }
   };
 
   const handleUnfollow = async () => {
-    if (!id) return;
+    if (!canal) return;
     try {
-      await unfollowCanal(id);
+      await unfollowCanal(canal.id);
       setIsFollowing(false);
+      setCanal((c) =>
+        c
+          ? { ...c, followersCount: Math.max(0, (c.followersCount ?? 0) - 1) }
+          : c
+      );
     } catch (err) {
       console.error("Error al dejar de seguir canal", err);
     }
@@ -99,17 +110,27 @@ export default function ChannelDetail() {
           </div>
         )}
 
+        {/* ⭐ ABRE MODAL EN VEZ DE NAVEGAR ⭐ */}
         {canal.idCanalPadre === null && (
           <button
-            onClick={() => navigate(`/create-channel/${canal.id}`)}
+            onClick={() => setOpenSolicitudModal(true)}
             className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition"
           >
-            Crear subcanal
+            Solicitar subcanal
           </button>
         )}
 
+        {openSolicitudModal && (
+          <CreateSolicitudCanalModal
+            parentId={canal.id}
+            onClose={() => setOpenSolicitudModal(false)}
+          />
+        )}
+
         <div className="bg-white p-4 rounded-lg shadow space-y-4">
-          <h2 className="font-bold text-lg text-purple-700 mb-2">Publicaciones</h2>
+          <h2 className="font-bold text-lg text-purple-700 mb-2">
+            Publicaciones
+          </h2>
 
           {user && (
             <CreatePublication
@@ -121,7 +142,9 @@ export default function ChannelDetail() {
           {loadingPubs ? (
             <p>Cargando publicaciones...</p>
           ) : publicaciones.length === 0 ? (
-            <p className="text-gray-500 text-sm">Aún no hay publicaciones en este canal.</p>
+            <p className="text-gray-500 text-sm">
+              Aún no hay publicaciones en este canal.
+            </p>
           ) : (
             <div className="space-y-4">
               {publicaciones.map((pub) => (

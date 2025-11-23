@@ -33,3 +33,9 @@ export const uploadAvatar = (file: File) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+
+export const deleteUser = (id: string) =>
+  api.delete<{ ok: boolean }>(`/usuarios/${id}`);
+
+export const cambiarRolUsuario = (id: string, rol: string) =>
+  api.patch(`/usuarios/${id}/rol`, { rol }).then(res => res.data);

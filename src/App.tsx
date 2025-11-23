@@ -1,5 +1,6 @@
 import { type JSX } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -12,11 +13,14 @@ import FollowingChannels from "./pages/FollowingChannels";
 import PublicationDetail from "./pages/PublicationDetail";
 import EditPublication from "./pages/EditPublication";
 import ProtectedRoute from "./components/ProtectedRoute";
+import EditChannel from "./pages/EditChannel";
+import ReportesPage from "./pages/ReportesPage";
+import RequireRole from "./components/RequireRole";
+import GestionSolicitudesPage from "./pages/GestionSolicitudesPage";
 
 export default function App(): JSX.Element {
   return (
     <Routes>
-
       <Route path="/" element={<Navigate to="/login" replace />} />
 
       <Route path="/login" element={<Login />} />
@@ -112,6 +116,35 @@ export default function App(): JSX.Element {
         }
       />
 
+      <Route
+        path="/canales/:id/editar"
+        element={
+          <ProtectedRoute>
+            <EditChannel />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/reportes"
+        element={
+          <ProtectedRoute>
+            <RequireRole allowed={["moderador", "admin"]}>
+              <ReportesPage />
+            </RequireRole>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/gestionar-solicitudes"
+        element={
+          <ProtectedRoute>
+            <RequireRole allowed={["moderador", "admin"]}>
+              <GestionSolicitudesPage />
+            </RequireRole>
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

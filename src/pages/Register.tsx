@@ -1,9 +1,11 @@
 import React, { useState, type JSX } from "react";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import useAuthError from "../hooks/useAuthError";
 
 export default function RegisterPage(): JSX.Element {
   const { register } = useAuth();
+  const { parseError } = useAuthError();
   const navigate = useNavigate();
 
   const [nombreUsuario, setNombreUsuario] = useState("");
@@ -17,11 +19,12 @@ export default function RegisterPage(): JSX.Element {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
     try {
       await register({ nombreUsuario, email, password, fechaNacimiento });
       navigate("/dashboard");
     } catch (err: unknown) {
-      setError((err as Error).message ?? "Error al registrarse");
+      setError(parseError(err));
     } finally {
       setLoading(false);
     }
@@ -30,6 +33,7 @@ export default function RegisterPage(): JSX.Element {
   return (
     <div className="max-w-md mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Crear cuenta</h2>
+
       <form onSubmit={onSubmit}>
         <input
           value={nombreUsuario}
@@ -38,6 +42,7 @@ export default function RegisterPage(): JSX.Element {
           className="w-full mb-3 p-2 border rounded"
           required
         />
+
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -46,6 +51,7 @@ export default function RegisterPage(): JSX.Element {
           className="w-full mb-3 p-2 border rounded"
           required
         />
+
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -55,6 +61,7 @@ export default function RegisterPage(): JSX.Element {
           className="w-full mb-3 p-2 border rounded"
           required
         />
+
         <input
           value={fechaNacimiento}
           onChange={(e) => setFechaNacimiento(e.target.value)}
@@ -64,7 +71,11 @@ export default function RegisterPage(): JSX.Element {
           required
         />
 
-        <button type="submit" disabled={loading} className="w-full p-2 bg-purple-600 text-white rounded">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full p-2 bg-purple-600 text-white rounded"
+        >
           {loading ? "Creando..." : "Registrarme"}
         </button>
       </form>

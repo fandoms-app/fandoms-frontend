@@ -1,7 +1,9 @@
 import { useState } from "react";
 import type { Publicacion } from "../types";
 import { useNavigate } from "react-router-dom";
-import PublicationMenu from "./PublicationMenu";
+import ActionMenu from "./ActionMenu";
+import useAuth from "../hooks/useAuth";
+import { deletePublicacion } from "../api/publicacionApi";
 
 interface Props {
   publicacion: Publicacion;
@@ -11,10 +13,37 @@ interface Props {
 
 export default function PublicationCard({ publicacion, onRefresh, depth = 0 }: Props) {
   const [openMedia, setOpenMedia] = useState(false);
+  const { user } = useAuth();
   const navigate = useNavigate();
 
+  const esPropietario = user?.id === publicacion.idUsuario;
+  const eliminada = publicacion.eliminada === true;
+
   const handleOpenDetail = () => navigate(`/publicaciones/${publicacion.id}`);
-  const handleReply = () => navigate(`/publicaciones/${publicacion.id}`);
+
+  if (eliminada) {
+    return (
+      <div
+        onClick={handleOpenDetail}
+        className={`p-4 rounded-xl bg-gray-100 text-gray-500 italic border border-gray-300 
+          cursor-pointer hover:bg-gray-200 transition ${
+            depth > 0 ? "ml-8 border-l-2 border-purple-200" : ""
+          }`}
+      >
+        Esta publicación ya no está disponible.
+      </div>
+    );
+  }
+
+  const handleDelete = async () => {
+    try {
+      await deletePublicacion(publicacion.id);
+      await onRefresh?.();
+    } catch (err) {
+      console.error("No se pudo eliminar publicacion", err);
+      alert("No se pudo eliminar la publicación.");
+    }
+  };
 
   const isVideo = publicacion.mediaUrl?.endsWith(".mp4");
   const mediaSrc = publicacion.mediaUrl ?? undefined;
@@ -66,13 +95,23 @@ export default function PublicationCard({ publicacion, onRefresh, depth = 0 }: P
           </div>
         </div>
 
-        <div onClick={(e) => e.stopPropagation()}>
-          <PublicationMenu publicacion={publicacion} onRefresh={onRefresh} />
-        </div>
+        {user && (
+          <div onClick={(e) => e.stopPropagation()}>
+            <ActionMenu
+              tipo="publicacion"
+              idObjetivo={publicacion.id}
+              esPropietario={esPropietario}
+              onEdit={() => navigate(`/edit-publication/${publicacion.id}`)}
+              onDelete={handleDelete}
+            />
+          </div>
+        )}
       </div>
 
       {publicacion.titulo && (
-        <h3 className="font-semibold text-lg text-purple-700">{publicacion.titulo}</h3>
+        <h3 className="font-semibold text-lg text-purple-700">
+          {publicacion.titulo}
+        </h3>
       )}
       <p className="text-gray-700 whitespace-pre-line">{publicacion.contenido}</p>
 
@@ -99,13 +138,10 @@ export default function PublicationCard({ publicacion, onRefresh, depth = 0 }: P
         </p>
       )}
 
-      <div
-        className="flex gap-4 mt-2 text-sm"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="flex gap-4 mt-2 text-sm" onClick={(e) => e.stopPropagation()}>
         <button
-          onClick={handleReply}
           className="flex items-center gap-1 text-gray-600 hover:underline"
+          onClick={() => navigate(`/publicaciones/${publicacion.id}`)}
         >
           Responder
         </button>
