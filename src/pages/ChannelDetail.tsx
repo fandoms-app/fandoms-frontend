@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import ChannelCard from "../components/ChannelCard";
 import useAuth from "../hooks/useAuth";
 import type { Canal, Publicacion } from "../types";
 import {
@@ -17,10 +16,13 @@ import CreatePublication from "./CreatePublication";
 import PublicationCard from "../components/PublicationCard";
 import { getPublicacionesByCanal } from "../api/publicacionApi";
 import CreateSolicitudCanalModal from "../pages/CreateSolicitudCanalModal";
+import { esStaff } from "../utils/roles";
+import ChannelHeader from "../components/ChannelHeader";
 
 export default function ChannelDetail() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [canal, setCanal] = useState<Canal | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -91,9 +93,8 @@ export default function ChannelDetail() {
       <div className="w-full max-w-4xl space-y-8">
         <BackButton />
 
-        <ChannelCard
+        <ChannelHeader
           canal={canal}
-          showFollowButton={!!user}
           isFollowing={isFollowing}
           onFollow={handleFollow}
           onUnfollow={handleUnfollow}
@@ -110,14 +111,26 @@ export default function ChannelDetail() {
           </div>
         )}
 
-        {/* ⭐ ABRE MODAL EN VEZ DE NAVEGAR ⭐ */}
-        {canal.idCanalPadre === null && (
-          <button
-            onClick={() => setOpenSolicitudModal(true)}
-            className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition"
-          >
-            Solicitar subcanal
-          </button>
+        {canal.idCanalPadre === null && user && (
+          <>
+            {!esStaff(user.rol) && (
+              <button
+                onClick={() => setOpenSolicitudModal(true)}
+                className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition"
+              >
+                Solicitar subcanal
+              </button>
+            )}
+
+            {esStaff(user.rol) && (
+              <button
+                onClick={() => navigate(`/create-channel/${canal.id}`)}
+                className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+              >
+                Crear subcanal
+              </button>
+            )}
+          </>
         )}
 
         {openSolicitudModal && (

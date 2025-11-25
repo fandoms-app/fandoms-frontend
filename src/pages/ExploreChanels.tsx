@@ -6,10 +6,13 @@ import { getRootCanales } from "../api/canalApi";
 import BackButton from "../components/BackButton";
 import useAuth from "../hooks/useAuth";
 import CreateSolicitudCanalModal from "../pages/CreateSolicitudCanalModal";
+import { useNavigate } from "react-router-dom";
+import { esStaff } from "../utils/roles";
 
 export default function ExploreChannels() {
   const [canales, setCanales] = useState<Canal[]>([]);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [openSolicitudModal, setOpenSolicitudModal] = useState(false);
 
@@ -30,12 +33,25 @@ export default function ExploreChannels() {
           </h1>
 
           {user && (
-            <button
-              onClick={() => setOpenSolicitudModal(true)}
-              className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
-            >
-              Solicitar canal
-            </button>
+            <>
+              {!esStaff(user.rol) && (
+                <button
+                  onClick={() => setOpenSolicitudModal(true)}
+                  className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+                >
+                  Solicitar canal
+                </button>
+              )}
+
+              {esStaff(user.rol) && (
+                <button
+                  onClick={() => navigate("/create-channel")}
+                  className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+                >
+                  Crear canal
+                </button>
+              )}
+            </>
           )}
         </div>
 

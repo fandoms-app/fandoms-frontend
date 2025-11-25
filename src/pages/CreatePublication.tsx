@@ -53,9 +53,9 @@ export default function CreatePublication({ idCanal, onCreated }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-4 rounded-xl shadow space-y-4"
+      className="bg-white p-3 rounded-lg shadow space-y-3"
     >
-      <h2 className="font-semibold text-lg text-purple-700">
+      <h2 className="font-semibold text-md text-purple-700">
         Crear publicación
       </h2>
 
@@ -71,35 +71,22 @@ export default function CreatePublication({ idCanal, onCreated }: Props) {
         placeholder="¿Qué estás pensando?"
         value={contenido}
         onChange={(e) => setContenido(e.target.value)}
-        className="w-full border rounded p-2 resize-none"
-        rows={3}
+        className="w-full border rounded p-2 resize-none text-sm"
+        rows={2}
       />
 
       <div className="flex flex-col gap-2">
-        <label className="flex items-center gap-2 text-purple-600 cursor-pointer hover:underline">
-          <span className="text-sm">Subir imagen o video</span>
-          <input
-            type="file"
-            accept="image/*,video/*"
-            className="hidden"
-            onChange={handleFileChange}
-          />
+        <label className="flex items-center gap-2 text-purple-600 cursor-pointer hover:underline text-sm">
+          Subir imagen o video
+          <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileChange} />
         </label>
 
         {previewUrl && (
-          <div className="flex justify-center mt-2">
+          <div className="flex justify-center mt-1">
             {file?.type.startsWith("video") ? (
-              <video
-                src={previewUrl}
-                controls
-                className="max-h-60 rounded-lg"
-              />
+              <video src={previewUrl} controls className="max-h-40 rounded-md" />
             ) : (
-              <img
-                src={previewUrl}
-                alt="preview"
-                className="max-h-60 rounded-lg object-cover"
-              />
+              <img src={previewUrl} className="max-h-40 rounded-md object-cover" />
             )}
           </div>
         )}
@@ -107,7 +94,7 @@ export default function CreatePublication({ idCanal, onCreated }: Props) {
 
       <button
         disabled={loading}
-        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition disabled:opacity-60"
+        className="bg-purple-600 text-white px-3 py-1.5 rounded hover:bg-purple-700 transition text-sm disabled:opacity-60"
       >
         {loading ? "Publicando..." : "Publicar"}
       </button>

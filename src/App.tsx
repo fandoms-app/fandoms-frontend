@@ -1,6 +1,5 @@
 import { type JSX } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -121,6 +120,15 @@ export default function App(): JSX.Element {
         element={
           <ProtectedRoute>
             <EditChannel />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
           </ProtectedRoute>
         }
       />

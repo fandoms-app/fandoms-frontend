@@ -1,29 +1,20 @@
-import Layout from "../components/Layout";
-import Card from "../components/Card";
 import useAuth from "../hooks/useAuth";
+import DashboardUser from "./DashboardUser";
+import StaffDashboard from "./DashboardStaff";
+import Layout from "../components/Layout";
 
 export default function Dashboard() {
-  const { user, loadingUser } = useAuth();
+  const { user } = useAuth();
 
-  if (loadingUser) {
-    return (
-      <Layout>
-        <p>Cargando perfil...</p>
-      </Layout>
-    );
-  }
+  if (!user) return null;
+
+  const rol = user.rol?.toLowerCase() ?? "usuario";
 
   return (
     <Layout>
-      <Card className="text-center">
-        <h1 className="text-2xl font-bold text-purple-600 mb-4">
-          Bienvenido, {user?.nombreUsuario ?? "Usuario"}
-        </h1>
-        <p className="text-gray-700">
-          Este es tu Dashboard. Desde aquí vas a poder explorar y gestionar tu
-          actividad.
-        </p>
-      </Card>
+      {rol === "admin" || rol === "moderador"
+        ? <StaffDashboard />
+        : <DashboardUser />}
     </Layout>
   );
 }

@@ -3,6 +3,12 @@ import type { Usuario } from "../types";
 
 export const getMe = () => api.get<Usuario>("/usuarios/me");
 
+export const getUsuarioById = (id: string) =>
+  api.get<Usuario>(`/usuarios/${id}`);
+
+export const getAllUsuarios = () =>
+  api.get<Usuario[]>("/usuarios");
+
 export const updateMe = (data: Partial<Usuario>) =>
   api.patch<Usuario>("/usuarios/me", data);
 

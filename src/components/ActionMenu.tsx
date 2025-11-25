@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import useAuth from "../hooks/useAuth";
 import ChangeRoleModal from "./ChangeRoleModal";
 import ReportForm from "../pages/ReportForm";
+import { esStaff, esAdmin, getRol } from "../utils/roles";
 
 type Tipo = "usuario" | "canal" | "publicacion";
 
@@ -42,32 +43,30 @@ export default function ActionMenu({
 
   if (!user) return null;
 
-  const rol = (user.rol ?? "usuario").toLowerCase();
-  const esAdmin = rol === "admin";
-  const esMod = rol === "moderador";
-  const esStaff = esAdmin || esMod;
-  const esMismoUsuario = tipo === "usuario" && idObjetivo === user.id;
+  const rol = getRol(user.rol);
+  const staff = esStaff(rol);
+  const admin = esAdmin(rol);
+  const esMismoUsuario = tipo === "usuario" && user.id === idObjetivo;
 
   const puedeEditar =
     tipo === "usuario"
       ? esPropietario
       : tipo === "canal"
-        ? esStaff
-        : tipo === "publicacion"
-          ? esPropietario
-          : false;
+      ? staff
+      : tipo === "publicacion"
+      ? esPropietario
+      : false;
 
   const puedeBorrar =
     tipo === "usuario"
-      ? esAdmin && !esMismoUsuario
+      ? admin && !esMismoUsuario
       : tipo === "canal"
-        ? esStaff
-        : tipo === "publicacion"
-          ? esPropietario || esStaff
-          : false;
+      ? staff
+      : tipo === "publicacion"
+      ? esPropietario || staff
+      : false;
 
-  const puedeCambiarRol =
-    tipo === "usuario" && esStaff && !esMismoUsuario;
+  const puedeCambiarRol = tipo === "usuario" && staff && !esMismoUsuario;
 
   const puedeReportar =
     (tipo === "usuario" || tipo === "publicacion" || tipo === "canal") &&
