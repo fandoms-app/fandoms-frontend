@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ActionMenu from "./ActionMenu";
 import useAuth from "../hooks/useAuth";
 import { deletePublicacion } from "../api/publicacionApi";
+import { formatearFechaHora } from "../utils/formatDate";
 
 interface Props {
   publicacion: Publicacion;
@@ -26,8 +27,7 @@ export default function PublicationCard({ publicacion, onRefresh, depth = 0 }: P
       <div
         onClick={handleOpenDetail}
         className={`p-4 rounded-xl bg-gray-100 text-gray-500 italic border border-gray-300 
-          cursor-pointer hover:bg-gray-200 transition ${
-            depth > 0 ? "ml-8 border-l-2 border-purple-200" : ""
+          cursor-pointer hover:bg-gray-200 transition ${depth > 0 ? "ml-8 border-l-2 border-purple-200" : ""
           }`}
       >
         Esta publicación ya no está disponible.
@@ -51,9 +51,8 @@ export default function PublicationCard({ publicacion, onRefresh, depth = 0 }: P
   return (
     <div
       onClick={handleOpenDetail}
-      className={`bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow space-y-3 cursor-pointer ${
-        depth > 0 ? "ml-8 border-l-2 border-purple-200" : ""
-      }`}
+      className={`bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow space-y-3 cursor-pointer ${depth > 0 ? "ml-8 border-l-2 border-purple-200" : ""
+        }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -90,7 +89,7 @@ export default function PublicationCard({ publicacion, onRefresh, depth = 0 }: P
               {publicacion.nombreUsuario ?? "Usuario desconocido"}
             </p>
             <p className="text-xs text-gray-500">
-              {new Date(publicacion.fechaCreacion).toLocaleString("es-AR")}
+              {formatearFechaHora(publicacion.fechaCreacion)}
             </p>
           </div>
         </div>

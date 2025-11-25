@@ -59,6 +59,7 @@ export default function ProfileCard({
           <ActionMenu
             tipo="usuario"
             idObjetivo={user.id}
+            rolObjetivo={user.rol}
             esPropietario={isOwnProfile}
             onEdit={onEdit}
             onDelete={handleDelete}
@@ -67,14 +68,24 @@ export default function ProfileCard({
       )}
 
       {user.avatar && (
-        <img src={user.avatar} alt={`Avatar de ${user.nombreUsuario}`} className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-purple-200" />
+        <img
+          src={user.avatar}
+          alt={`Avatar de ${user.nombreUsuario}`}
+          className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-purple-200"
+        />
       )}
 
-      <h2 className="text-2xl font-bold text-purple-700 mb-1">{user.nombreUsuario}</h2>
+      <h2 className="text-2xl font-bold text-purple-700 mb-1">
+        {user.nombreUsuario}
+      </h2>
 
       {user.rol && (
         <div className="flex justify-center mb-3">
-          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${getRoleBadgeClasses(user.rol)}`}>
+          <span
+            className={`text-xs font-semibold px-3 py-1 rounded-full ${getRoleBadgeClasses(
+              user.rol
+            )}`}
+          >
             {user.rol.toUpperCase()}
           </span>
         </div>
@@ -82,21 +93,37 @@ export default function ProfileCard({
 
       <p className="text-gray-700">{user.bio || "Sin biografía"}</p>
 
-      {isOwnProfile && <p className="mt-2 text-sm text-gray-500">📧 {user.email}</p>}
+      {isOwnProfile && (
+        <p className="mt-2 text-sm text-gray-500">📧 {user.email}</p>
+      )}
 
-      {user.fechaNacimiento && <p className="text-sm text-gray-500">🎂 {new Date(user.fechaNacimiento).toLocaleDateString("es-AR")}</p>}
+      {user.fechaNacimiento && (
+        <p className="text-sm text-gray-500">
+          🎂 {new Date(user.fechaNacimiento).toLocaleDateString("es-AR")}
+        </p>
+      )}
 
-      {typeof user.seguidoresCount === "number" && <p className="mt-2 text-sm">👥 Seguidores: {user.seguidoresCount}</p>}
-      {typeof user.seguidosCount === "number" && <p className="text-sm">➡️ Seguidos: {user.seguidosCount}</p>}
+      {typeof user.seguidoresCount === "number" && (
+        <p className="mt-2 text-sm">👥 Seguidores: {user.seguidoresCount}</p>
+      )}
+      {typeof user.seguidosCount === "number" && (
+        <p className="text-sm">➡️ Seguidos: {user.seguidosCount}</p>
+      )}
 
       {!isOwnProfile && showFollow && (
-        <button onClick={isFollowing ? onUnfollow : onFollow} className="mt-4 w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition">
+        <button
+          onClick={isFollowing ? onUnfollow : onFollow}
+          className="mt-4 w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition"
+        >
           {isFollowing ? "Dejar de seguir" : "Seguir"}
         </button>
       )}
 
       {onEdit && isOwnProfile && (
-        <button onClick={onEdit} className="mt-4 w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition">
+        <button
+          onClick={onEdit}
+          className="mt-4 w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition"
+        >
           Editar perfil
         </button>
       )}

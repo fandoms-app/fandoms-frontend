@@ -9,6 +9,7 @@ type Tipo = "usuario" | "canal" | "publicacion";
 interface Props {
   tipo: Tipo;
   idObjetivo: string;
+  rolObjetivo?: string | null;
   esPropietario?: boolean;
   onEdit?: () => void;
   onDelete?: () => void | Promise<void>;
@@ -18,6 +19,7 @@ interface Props {
 export default function ActionMenu({
   tipo,
   idObjetivo,
+  rolObjetivo,
   esPropietario = false,
   onEdit,
   onDelete,
@@ -48,6 +50,8 @@ export default function ActionMenu({
   const admin = esAdmin(rol);
   const esMismoUsuario = tipo === "usuario" && user.id === idObjetivo;
 
+  const objetivoEsAdmin = rolObjetivo?.toLowerCase() === "admin";
+
   const puedeEditar =
     tipo === "usuario"
       ? esPropietario
@@ -66,7 +70,11 @@ export default function ActionMenu({
       ? esPropietario || staff
       : false;
 
-  const puedeCambiarRol = tipo === "usuario" && staff && !esMismoUsuario;
+  const puedeCambiarRol =
+    tipo === "usuario" &&
+    staff &&
+    !esMismoUsuario &&
+    (!objetivoEsAdmin || admin); 
 
   const puedeReportar =
     (tipo === "usuario" || tipo === "publicacion" || tipo === "canal") &&

@@ -11,7 +11,7 @@ export default function ChangeRoleModal({ userId, onClose }: Props) {
   const [rol, setRol] = useState("usuario");
   const [loading, setLoading] = useState(false);
 
-  const { refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   const submit = async () => {
     try {
@@ -43,7 +43,10 @@ export default function ChangeRoleModal({ userId, onClose }: Props) {
         >
           <option value="usuario">Usuario</option>
           <option value="moderador">Moderador</option>
-          <option value="admin">Admin</option>
+
+          {user?.rol === "admin" && (
+            <option value="admin">Admin</option>
+          )}
         </select>
 
         <div className="flex justify-end gap-3">
