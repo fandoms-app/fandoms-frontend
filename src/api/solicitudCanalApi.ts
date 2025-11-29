@@ -1,5 +1,5 @@
 import api from "./api";
-import type { SolicitudCanal } from "../types";
+import type { SolicitudCanal } from "../types/solicitudCanal";
 
 export const crearSolicitudCanal = (data: {
   nombre: string;

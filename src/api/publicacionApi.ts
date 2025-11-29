@@ -1,5 +1,5 @@
+import type { Publicacion } from "../types/publicacion";
 import api from "./api";
-import type { Publicacion } from "../types";
 
 export const createPublicacion = (data: FormData) => {
   return api.post("/publicaciones", data, {

@@ -1,4 +1,5 @@
-import type { Canal, Usuario } from "../types";
+import type { Canal } from "../types/canal";
+import type { Usuario } from "../types/usuario";
 import api from "./api";
 
 export const getAllCanales = () =>

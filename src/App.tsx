@@ -1,21 +1,21 @@
 import { type JSX } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import EditProfile from "./pages/EditProfile";
-import UserProfile from "./pages/UserProfile";
-import ExploreChannels from "./pages/ExploreChanels";
-import ChannelDetail from "./pages/ChannelDetail";
-import CreateChannel from "./pages/CreateChannel";
-import FollowingChannels from "./pages/FollowingChannels";
-import PublicationDetail from "./pages/PublicationDetail";
-import EditPublication from "./pages/EditPublication";
-import ProtectedRoute from "./components/ProtectedRoute";
-import EditChannel from "./pages/EditChannel";
-import ReportesPage from "./pages/ReportesPage";
-import RequireRole from "./components/RequireRole";
-import GestionSolicitudesPage from "./pages/GestionSolicitudesPage";
+import RequireRole from "./Routes/RequireRole";
+import GestionSolicitudesPage from "./pages/Channel/GestionSolicitudesPage";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
+import ProtectedRoute from "./Routes/ProtectedRoute";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import EditProfile from "./pages/User/EditProfile";
+import UserProfile from "./pages/User/UserProfile";
+import ExploreChannels from "./pages/Channel/ExploreChannels";
+import ChannelDetail from "./pages/Channel/ChannelDetail";
+import CreateChannel from "./pages/Channel/CreateChannel";
+import FollowingChannels from "./pages/Channel/FollowingChannels";
+import PublicationDetail from "./pages/Publication/PublicationDetail";
+import EditPublication from "./pages/Publication/EditPublication";
+import EditChannel from "./pages/Channel/EditChannel";
+import ReportesPage from "./pages/Reports/ReportesPage";
 
 export default function App(): JSX.Element {
   return (

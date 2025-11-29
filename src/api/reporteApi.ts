@@ -1,4 +1,4 @@
-import type { Reporte } from "../types";
+import type { Reporte } from "../types/reporte";
 import api from "./api";
 
 export const crearReporte = (payload: {

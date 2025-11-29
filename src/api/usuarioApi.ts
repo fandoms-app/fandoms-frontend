@@ -1,5 +1,5 @@
+import type { Usuario } from "../types/usuario";
 import api from "./api";
-import type { Usuario } from "../types";
 
 export const getMe = () => api.get<Usuario>("/usuarios/me");
 

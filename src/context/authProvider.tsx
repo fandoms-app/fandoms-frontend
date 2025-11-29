@@ -10,8 +10,8 @@ import {
     updateProfile,
 } from "firebase/auth";
 import api from "../api/api";
-import type { Usuario } from "../types";
 import { AuthContext } from "./authContext";
+import type { Usuario } from "../types/usuario";
 
 interface FirebaseAuthError extends Error {
   code: string;
